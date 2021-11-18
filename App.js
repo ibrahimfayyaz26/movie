@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import axios from 'axios';
-
-const fetchData = async () => {
-  const res = await axios.get("https://api.themoviedb.org/3/movie/popular?api_key=d8d293e2494faf7063c034a04330cacb")
-  const data = JSON.stringify(res.data,null,2)
-  console.log(data)
-}
+import {popularMovies,popularTv,upcomingMovies} from './services/api'
 
 const App = () => {
- fetchData()
+  const [movies, setMovies] = useState("");
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    popularMovies().then(m=>setMovies(m)).catch(e=>setError(e));
+    // console.log(movies)
+  }, [])
+
   return (
     <View style={styles.container}>
-      <Text>Hello World</Text>
+      <Text>Movie: {movies[0].original_title}</Text>
+      <Text>Language: {movies[0].original_language}</Text>
+      <Text>Date: {movies[0].release_date}</Text>
+      {error && <Text style={{color:"red"}} >Error: Server error</Text>}
     </View>
   );
 };
