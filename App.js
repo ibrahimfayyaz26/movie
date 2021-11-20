@@ -7,18 +7,28 @@ const App = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    popularMovies().then(m=>setMovies(m)).catch(e=>setError(e));
-    // console.log(movies)
+    popularMovies()
+    .then(m=>{setMovies(m[0])})
+    .catch(e=>{setError(e)});
+    return ()=>{
+      setMovies("");
+      setError(false)
+    }
   }, [])
 
+  // console.log(movies)
+if(movies){
   return (
     <View style={styles.container}>
-      <Text>Movie: {movies[0].original_title}</Text>
-      <Text>Language: {movies[0].original_language}</Text>
-      <Text>Date: {movies[0].release_date}</Text>
+      <Text>Movie: {movies.original_title}</Text>
+      <Text>Language: {movies.original_language}</Text>
+      <Text>Date: {movies.release_date}</Text>
       {error && <Text style={{color:"red"}} >Error: Server error</Text>}
     </View>
   );
+}else{
+  return null
+}
 };
 
 // React Native Styles
